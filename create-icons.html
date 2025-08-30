@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CamMeasure Icon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .icon-container {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            background: white;
+        }
+        .download-btn {
+            display: block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        .download-btn:hover {
+            background: #5a67d8;
+        }
+    </style>
+</head>
+<body>
+    <h1>CamMeasure Icon Generator</h1>
+    <p>Click on any icon to download it. These are placeholder icons for development.</p>
+    
+    <div id="icons"></div>
+
+    <script>
+        const sizes = [16, 32, 72, 96, 128, 144, 152, 192, 384, 512];
+        
+        function createIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Camera icon
+            ctx.fillStyle = 'white';
+            const cameraSize = size * 0.6;
+            const cameraX = (size - cameraSize) / 2;
+            const cameraY = (size - cameraSize) / 2;
+            
+            // Camera body
+            ctx.fillRect(cameraX, cameraY, cameraSize, cameraSize * 0.8);
+            
+            // Camera lens
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, cameraSize * 0.3, 0, 2 * Math.PI);
+            ctx.fillStyle = '#2d3748';
+            ctx.fill();
+            
+            // Camera flash
+            ctx.fillStyle = '#fbbf24';
+            ctx.fillRect(cameraX + cameraSize * 0.1, cameraY - cameraSize * 0.15, cameraSize * 0.2, cameraSize * 0.15);
+            
+            // Measurement lines
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = Math.max(1, size * 0.02);
+            ctx.beginPath();
+            ctx.moveTo(size * 0.2, size * 0.2);
+            ctx.lineTo(size * 0.8, size * 0.8);
+            ctx.stroke();
+            
+            return canvas;
+        }
+        
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        sizes.forEach(size => {
+            const container = document.createElement('div');
+            container.className = 'icon-container';
+            
+            const canvas = createIcon(size);
+            canvas.style.cursor = 'pointer';
+            canvas.onclick = () => downloadCanvas(canvas, `icon-${size}x${size}.png`);
+            
+            const label = document.createElement('div');
+            label.textContent = `${size}x${size}`;
+            label.style.fontSize = '12px';
+            label.style.marginTop = '5px';
+            
+            const downloadBtn = document.createElement('a');
+            downloadBtn.href = '#';
+            downloadBtn.className = 'download-btn';
+            downloadBtn.textContent = 'Download';
+            downloadBtn.onclick = (e) => {
+                e.preventDefault();
+                downloadCanvas(canvas, `icon-${size}x${size}.png`);
+            };
+            
+            container.appendChild(canvas);
+            container.appendChild(label);
+            container.appendChild(downloadBtn);
+            
+            document.getElementById('icons').appendChild(container);
+        });
+    </script>
+</body>
+</html>

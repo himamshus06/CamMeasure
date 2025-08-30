@@ -1,0 +1,48 @@
+{
+  "name": "cammeasure",
+  "version": "1.0.0",
+  "description": "A professional camera-based measurement web application using computer vision and calibration techniques",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "serve": "python -m http.server 8000",
+    "build": "echo 'No build step required - pure HTML/CSS/JS application'",
+    "test": "echo 'Open index.html in a browser to test'",
+    "deploy": "echo 'Upload files to your web hosting service'",
+    "pwa:icons": "echo 'Open create-icons.html in browser to generate PWA icons'",
+    "pwa:audit": "echo 'Use Lighthouse in Chrome DevTools to audit PWA features'"
+  },
+  "keywords": [
+    "camera",
+    "measurement",
+    "computer-vision",
+    "calibration",
+    "web-app",
+    "html5",
+    "javascript",
+    "webrtc",
+    "canvas",
+    "responsive"
+  ],
+  "author": "CamMeasure Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/cammeasure.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/cammeasure/issues"
+  },
+  "homepage": "https://github.com/yourusername/cammeasure#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {},
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

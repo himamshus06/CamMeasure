@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CamMeasure - Camera-Based Measurement Tool</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Professional camera-based measurement tool using computer vision and calibration">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CamMeasure">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-TileImage" content="/icons/icon-144x144.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>CamMeasure</h1>
+            <p>Professional camera-based measurement tool</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Camera Section -->
+            <section class="camera-section">
+                <div class="video-container">
+                    <video id="camera-feed" autoplay playsinline muted></video>
+                    <canvas id="overlay-canvas"></canvas>
+                    
+                    <!-- Camera Controls -->
+                    <div class="camera-controls">
+                        <button id="start-camera" class="btn btn-primary">
+                            <span class="icon">📷</span>
+                            Start Camera
+                        </button>
+                        <button id="stop-camera" class="btn btn-secondary" disabled>
+                            <span class="icon">⏹️</span>
+                            Stop Camera
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Control Panel -->
+            <section class="control-panel">
+                <!-- Calibration Section -->
+                <div class="control-group">
+                    <h3>Calibration</h3>
+                    <div class="calibration-controls">
+                        <div class="input-group">
+                            <label for="reference-length">Reference Length:</label>
+                            <input type="number" id="reference-length" min="0.1" step="0.1" value="8.5" placeholder="8.5">
+                            <select id="reference-unit">
+                                <option value="cm">cm</option>
+                                <option value="mm">mm</option>
+                                <option value="in">inches</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="reference-name">Reference Object:</label>
+                            <select id="reference-name">
+                                <option value="credit-card">Credit Card (8.5 × 5.4 cm)</option>
+                                <option value="a4-paper">A4 Paper (21.0 × 29.7 cm)</option>
+                                <option value="us-dollar">US Dollar (15.6 × 6.6 cm)</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+                        <button id="calibrate-btn" class="btn btn-success" disabled>
+                            <span class="icon">🎯</span>
+                            Calibrate
+                        </button>
+                    </div>
+                    <div class="calibration-status">
+                        <span id="calibration-indicator" class="status-badge status-pending">Not Calibrated</span>
+                        <span id="scale-factor" class="scale-info"></span>
+                    </div>
+                </div>
+
+                <!-- Measurement Section -->
+                <div class="control-group">
+                    <h3>Measurement</h3>
+                    <div class="measurement-controls">
+                        <button id="measure-btn" class="btn btn-primary" disabled>
+                            <span class="icon">📏</span>
+                            Start Measuring
+                        </button>
+                        <button id="clear-measurements" class="btn btn-secondary" disabled>
+                            <span class="icon">🗑️</span>
+                            Clear All
+                        </button>
+                    </div>
+                    <div class="measurement-instructions">
+                        <p id="measurement-hint">Click "Start Measuring" then tap two points on the object</p>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="control-group">
+                    <h3>Measurements</h3>
+                    <div id="measurements-list" class="measurements-list">
+                        <p class="no-measurements">No measurements yet</p>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div class="control-group">
+                    <h3>Settings</h3>
+                    <div class="settings-controls">
+                        <div class="input-group">
+                            <label for="display-unit">Display Unit:</label>
+                            <select id="display-unit">
+                                <option value="cm">cm</option>
+                                <option value="mm">mm</option>
+                                <option value="in">inches</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="line-color">Line Color:</label>
+                            <input type="color" id="line-color" value="#ff6b6b">
+                        </div>
+                        <div class="input-group">
+                            <label for="line-width">Line Width:</label>
+                            <input type="range" id="line-width" min="1" max="5" value="2">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Instructions Modal -->
+        <div id="instructions-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>How to Use CamMeasure</h2>
+                <div class="instructions">
+                    <div class="instruction-step">
+                        <h3>1. Start Camera</h3>
+                        <p>Click "Start Camera" to access your device's camera</p>
+                    </div>
+                    <div class="instruction-step">
+                        <h3>2. Calibrate</h3>
+                        <p>Place a reference object (like a credit card) in view and click "Calibrate"</p>
+                    </div>
+                    <div class="instruction-step">
+                        <h3>3. Measure</h3>
+                        <p>Click "Start Measuring" then tap two points on the object you want to measure</p>
+                    </div>
+                    <div class="instruction-step">
+                        <h3>4. View Results</h3>
+                        <p>Your measurements will appear on screen and in the results list</p>
+                    </div>
+                </div>
+                <button id="get-started-btn" class="btn btn-primary">Get Started</button>
+            </div>
+        </div>
+
+        <!-- PWA Installation Prompt -->
+        <div id="pwa-install-prompt" class="pwa-install-prompt hidden">
+            <div class="pwa-install-content">
+                <div class="pwa-install-icon">📱</div>
+                <div class="pwa-install-text">
+                    <h3>Install CamMeasure</h3>
+                    <p>Add to your home screen for quick access and offline use</p>
+                </div>
+                <button id="pwa-install-btn" class="btn btn-primary">Install</button>
+                <button id="pwa-dismiss-btn" class="btn btn-secondary">Not Now</button>
+            </div>
+        </div>
+
+        <!-- Offline Indicator -->
+        <div id="offline-indicator" class="offline-indicator hidden">
+            <span class="icon">📶</span>
+            <span>You're offline - using cached version</span>
+        </div>
+
+        <!-- Help Button -->
+        <button id="help-btn" class="help-btn" title="Show Instructions">
+            <span class="icon">❓</span>
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
